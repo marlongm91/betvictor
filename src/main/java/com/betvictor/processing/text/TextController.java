@@ -1,5 +1,6 @@
 package com.betvictor.processing.text;
 
+import com.betvictor.processing.kafka.Producer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -12,6 +13,8 @@ import org.springframework.web.bind.annotation.*;
 @Validated()
 public class TextController {
     private final TextService service;
+    private final Producer producer;
+
 
     @GetMapping(value = "/betvictor/text")
     @ResponseBody
@@ -19,7 +22,9 @@ public class TextController {
     public TextResponse getText(@RequestParam(value = "p") int paragraphNumber, @RequestParam(value = "l") ParagraphLengths length) {
 
         log.debug("Processing request with p: {} and l: {}", paragraphNumber, length);
-        return service.getText(paragraphNumber, length);
+        var response = service.getText(paragraphNumber, length);
+        producer.sendMessage(response);
+        return response;
     }
 }
 

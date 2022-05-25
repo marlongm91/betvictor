@@ -23,6 +23,7 @@ public class TextServiceImpl implements TextService {
 
     private final RestTemplate template;
 
+
     @Value("${loremIpsumUrl}")
     private String loremIpsumUrl;
 
